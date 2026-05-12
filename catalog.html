@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameScope | Reseñas de Videojuegos</title>
+
+    <!-- Fuente moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="shared.css">
+</head>
+
+<body>
+
+<header>
+    <h1>🎮 GameScope</h1>
+    <nav>
+        <a href="index.html">Inicio</a>
+        <a href="#">Reseñas</a>
+        <a href="news.html">Noticias</a>
+        <a href="lame.html">Contacto</a>
+    </nav>
+</header>
+<h1 class="center">Recent Reviews</h1>
+
+<div class="grid" id="reviews-container"></div>
+
+<script type="module">
+
+import { createClient }
+from 'https://esm.sh/@supabase/supabase-js@2';
+
+const supabaseUrl =
+    'https://sitsladcfazfbqyrnvby.supabase.co';
+
+const supabaseKey =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpdHNsYWRjZmF6ZmJxeXJudmJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMjU1NDMsImV4cCI6MjA5MzcwMTU0M30.pnptoZXK5aw1fl713PFoJTqMgSSgcNPUhJiCqK50kg8';
+
+const supabase =
+    createClient(supabaseUrl, supabaseKey);
+
+function timeAgo(dateString) {
+
+    const date = new Date(dateString);
+    const now = new Date();
+
+    const seconds =
+        Math.floor((now - date) / 1000);
+
+    const intervals = [
+        { label: 'year', seconds: 31536000 },
+        { label: 'month', seconds: 2592000 },
+        { label: 'day', seconds: 86400 },
+        { label: 'hour', seconds: 3600 },
+        { label: 'minute', seconds: 60 },
+        { label: 'second', seconds: 1 }
+    ];
+
+    const rtf =
+        new Intl.RelativeTimeFormat('en', {
+            numeric: 'auto'
+        });
+
+    for (const interval of intervals) {
+
+        const count =
+            Math.floor(seconds / interval.seconds);
+
+        if (count >= 1) {
+
+            return rtf.format(
+                -count,
+                interval.label
+            );
+        }
+    }
+
+    return 'just now';
+}
+
+async function loadReviews() {
+
+    const { data: reviews, error } = await supabase
+        .from('Reviews')
+        .select(`
+            *,
+            Games (
+                name
+            )
+        `)
+        .order('created_at', {
+            ascending: false
+        });
+
+    if (error) {
+
+        console.error(error);
+        return;
+    }
+
+    const container =
+        document.getElementById('reviews-container');
+
+    container.innerHTML = '';
+
+    reviews.forEach(review => {
+
+        const card =
+            document.createElement('div');
+
+        card.className = 'card';
+
+        card.innerHTML = `
+            <h2>${review.Games?.name || 'Unknown Game'}</h2>
+            <h4>${review.name}</h4>
+            <h3>${review.score}/10</h3>
+            <p>${review.text}</p>
+            <small>${timeAgo(review.created_at)}</small>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+loadReviews();
+
+</script>
+<footer>
+    <p>© 2026 GameScope | Web de reseñas de videojuegos</p>
+</footer>
+
+</body>
+</html>
