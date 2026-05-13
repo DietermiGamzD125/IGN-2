@@ -9,6 +9,15 @@ body {
     background: #0f172a;
     color: #e2e8f0;
     text-align:center
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    padding: 40px;
+    flex: 1;
 }
 
 header {
@@ -42,9 +51,44 @@ nav a:hover {
     color: #38bdf8;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+input, textarea {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #2a2a3d;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #8a5cff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
 .hero {
     padding: 60px 40px;
     background: linear-gradient(to right, #020617, #0f172a);
+}
+
+button:hover {
+    background-color: #6f46d6;
 }
 
 .hero h2 {
@@ -136,6 +180,24 @@ nav a:hover {
     grid-template-columns: repeat(auto-fit, 300px);
     justify-content: center;
     gap: 10px;
+}
+
+.contacto {
+    max-width: 700px;
+    margin: auto;
+    background-color: #1c1c2b;
+    padding: 30px;
+    border-radius: 12px;
+}
+
+.contacto h2 {
+    text-align: center;
+    color: #8a5cff;
+}
+
+.contacto p {
+    text-align: center;
+    color: #ccc;
 }
 
 footer {
